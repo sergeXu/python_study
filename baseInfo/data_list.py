@@ -92,6 +92,11 @@ print(players[1:])
 print(players[:-1])
 print("最后3名",players[-3:])
 print("前3名",players[:3])
+
+# 找索引
+if 'michael' in players:
+    print("michael position is",players.index('michael'))
+
 # 复制列表
 players2 = players[:]
 print("players2",players2)
