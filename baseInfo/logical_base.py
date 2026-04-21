@@ -37,4 +37,44 @@ for i in number:
     else:
         print(f"{i}th")
 
+print("\n *** while循环 ***")
+current_number = 1
+while current_number <= 5:
+    print(current_number)
+    current_number += 1
+
+# 标志位 flag
+prompt = "\nTell me something, and I will repeat it back to you:"
+prompt += "\nEnter 'quit' to end the program. "
+
+active = True
+while active:
+    message = input(prompt)
+    if message == 'quit':
+        active = False
+    else:
+        print(message)
+
+# while循环处理列表和字典
+print("\n *** while循环处理列表和字典 ***")
+unconfirmed_users = ['alice', 'brian', 'candace']
+confirmed_users = []
+
+# 验证每个用户，直到没有未验证用户为止。
+# 将每个经过验证的用户都移到已验证用户列表中。
+while unconfirmed_users:
+    current_user = unconfirmed_users.pop()
+    print(f"Verifying user: {current_user.title()}")
+    confirmed_users.append(current_user)
+# 显示所有已验证的用户。
+print("\nThe following users have been confirmed:")
+for confirmed_user in confirmed_users:
+    print(confirmed_user.title())
+
+# 列表删除特定值的元素
+pets = ['dog', 'cat', 'dog', 'goldfish', 'cat', 'rabbit', 'cat']
+print(pets)
+while 'cat' in pets:
+    pets.remove('cat')
+print(pets)
 
