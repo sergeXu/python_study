@@ -117,3 +117,12 @@ print(demensions[0],demensions[1])
 demensions = (400,500)
 print(demensions,type(demensions))
 
+# 整个数组的添加
+nums = [i for i in range(1,11)]
+print(nums)
+ans = []
+# extend()
+ans.extend(nums)
+# 快捷写法
+ans += nums
+print(ans)
