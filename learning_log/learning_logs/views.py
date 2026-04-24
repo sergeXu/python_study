@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.shortcuts import render, redirect
 
 from .forms import TopicForm,EntryForm
@@ -9,17 +11,21 @@ from .models import Topic,Entry
 def index(request):
     # 学习笔记的首页
     return render(request, 'learning_logs/index.html')
+@login_required
 def topics(request):
-    topics = Topic.objects.order_by('date_added')
+    topics = Topic.objects.filter(owner=request.user).order_by('date_added')
     context = {'topics': topics}
     return render(request, 'learning_logs/topics.html', context)
+@login_required
 def topic(request, topic_id):
     # 形参视图参数
     topic = Topic.objects.get(id=topic_id)
+    if topic.owner != request.user:
+        raise Http404
     entries = topic.entry_set.order_by('date_added')
     context = {'topic': topic, 'entries': entries}
     return render(request, 'learning_logs/topic.html', context)
-
+@login_required
 def new_topic(request):
     # 添加新主题
     if request.method != 'POST':
@@ -27,12 +33,14 @@ def new_topic(request):
     else:
         form = TopicForm(data=request.POST)
         if form.is_valid():
-            form.save()
+            new_topic = form.save(commit=False)
+            new_topic.owner = request.user
+            new_topic.save()
             # “redirect 函数，用户提交主题后将使用这个函数重定向到网页 topics”
             return redirect('learning_logs:topics')
     context = {'form': form}
     return render(request, 'learning_logs/new_topic.html', context)
-
+@login_required
 def new_entry(request, topic_id):
     topic = Topic.objects.get(id=topic_id)
     if request.method != 'POST':
@@ -46,10 +54,12 @@ def new_entry(request, topic_id):
             return redirect('learning_logs:topic', topic_id)
     context = {'form': form, 'topic': topic}
     return render(request, 'learning_logs/new_entry.html', context)
-
+@login_required
 def edit_entry(request, entry_id):
     entry = Entry.objects.get(id=entry_id)
     topic = entry.topic
+    if topic.owner != request.user:
+        raise Http404
     if request.method != 'POST':
         form = EntryForm(instance=entry)
     else:
